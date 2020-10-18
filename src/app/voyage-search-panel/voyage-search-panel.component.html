@@ -3,30 +3,18 @@
 
     <mat-form-field class="search__form_field" appearance="outline">
       <mat-label>Departure station</mat-label>
-      <input type="text"
-             aria-label="Departure station"
-             matInput
-             formControlName="departureStation"
-             (keyup)="applyFilter()"
-      >
+      <input type="text" aria-label="Departure station" matInput formControlName="departureStation"
+             (keyup)="applyFilter()">
     </mat-form-field>
 
     <mat-form-field class="search__form_field" appearance="outline">
       <mat-label>Arrival station</mat-label>
-      <input type="text"
-             aria-label="Arrival station"
-             matInput
-             formControlName="arrivalStation"
-             (keyup)="applyFilter()"
-      >
+      <input type="text" aria-label="Arrival station" matInput formControlName="arrivalStation" (keyup)="applyFilter()">
     </mat-form-field>
 
     <mat-form-field class="search__form_field" appearance="outline">
       <mat-label>Choose a date</mat-label>
-      <input matInput
-             formControlName="departureDate"
-             [matDatepicker]="picker"
-             (dateInput)="applyFilter()">
+      <input matInput formControlName="departureDate" [matDatepicker]="picker" (dateInput)="applyFilter()">
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
@@ -36,38 +24,68 @@
     <table mat-table [dataSource]="dataSource">
 
       <ng-container matColumnDef="departureDate">
-        <th mat-header-cell *matHeaderCellDef> DEP. DATE</th>
+        <th mat-header-cell *matHeaderCellDef>
+
+          <mat-form-field>
+            <input matInput [matDatepicker]="dps" placeholder="Start date" [formControl]="startDate"
+                   (dateChange)="dateChanged('startDate', dps)">
+            <mat-datepicker-toggle matSuffix [for]="dps"></mat-datepicker-toggle>
+            <mat-datepicker #dps></mat-datepicker>
+          </mat-form-field>
+          <br />
+          <mat-form-field>
+            <input matInput [matDatepicker]="dpe" placeholder="End  date" [formControl]="endDate"
+                   (dateChange)="dateChanged('endDate', endDate.value)">
+            <mat-datepicker-toggle matSuffix [for]="dpe"></mat-datepicker-toggle>
+            <mat-datepicker #dpe></mat-datepicker>
+          </mat-form-field>
+
+        </th>
         <td mat-cell *matCellDef="let row"> {{row.departureDate.toDateString()}} </td>
       </ng-container>
 
       <ng-container matColumnDef="departureStation">
-        <th mat-header-cell *matHeaderCellDef> DEP. STATION</th>
+        <th mat-header-cell *matHeaderCellDef> DEP. STATION
+
+          <input class="filter-input" matInput (keyup)="applyNewFilter('DEP. STATION', $event.target.value)"
+                 placeholder="Filter DEP. STATION" />
+
+        </th>
         <td mat-cell *matCellDef="let row"> {{row.route.departureStation.name}} </td>
       </ng-container>
 
       <ng-container matColumnDef="arrivalStation">
-        <th mat-header-cell *matHeaderCellDef> ARR. STATION</th>
+        <th mat-header-cell *matHeaderCellDef>
+
+          <mat-form-field>
+            <mat-select placeholder="ARR. STATION" [formControl]="toppings" multiple
+                        (selectionChange)="applyNewSelectionList('ARR. STATION', $event)">
+              <mat-option *ngFor="let topping of toppingList" [value]="topping">{{topping}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+        </th>
         <td mat-cell *matCellDef="let row"> {{row.route.arrivalStation.name}} </td>
       </ng-container>
 
       <ng-container matColumnDef="available">
-        <th mat-header-cell *matHeaderCellDef > AVAILABLE </th>
-        <td mat-cell *matCellDef="let row" > {{availableSeats(row.seats)}} </td>
+        <th mat-header-cell *matHeaderCellDef> AVAILABLE </th>
+        <td mat-cell *matCellDef="let row"> {{availableSeats(row.seats)}} </td>
       </ng-container>
 
       <ng-container matColumnDef="sold">
-        <th mat-header-cell *matHeaderCellDef > SOLD </th>
-        <td mat-cell *matCellDef="let row" > {{soldSeats(row.seats)}} </td>
+        <th mat-header-cell *matHeaderCellDef> SOLD </th>
+        <td mat-cell *matCellDef="let row"> {{soldSeats(row.seats)}} </td>
       </ng-container>
 
       <ng-container matColumnDef="reserve">
-        <th mat-header-cell *matHeaderCellDef > RESERVE </th>
-        <td mat-cell *matCellDef="let row" > {{reserveSeats(row.seats)}} </td>
+        <th mat-header-cell *matHeaderCellDef> RESERVE </th>
+        <td mat-cell *matCellDef="let row"> {{reserveSeats(row.seats)}} </td>
       </ng-container>
 
       <ng-container matColumnDef="unavailable">
-        <th mat-header-cell *matHeaderCellDef > UNAVAILABLE </th>
-        <td mat-cell *matCellDef="let row" > {{unavailableSeats(row.seats)}} </td>
+        <th mat-header-cell *matHeaderCellDef> UNAVAILABLE </th>
+        <td mat-cell *matCellDef="let row"> {{unavailableSeats(row.seats)}} </td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>

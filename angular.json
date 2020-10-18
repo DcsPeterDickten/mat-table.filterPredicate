@@ -10,6 +10,9 @@
       "sourceRoot": "src",
       "prefix": "app",
       "architect": {
+        "angularCompilerOptions": {
+          "enableIvy": false
+        },
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {

@@ -1,9 +1,15 @@
-import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
-import {MatTableDataSource} from '@angular/material/table';
-import {DRMRoute, Seat, SeatStatus, Station, Voyage} from '../shared/entities.service';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {from, Observable} from 'rxjs';
-import {distinct, map, mergeMap, startWith, toArray} from 'rxjs/operators';
+// https://medium.com/@sevriukovmk/angular-mat-table-filter-2ead680c57bb
+// https://blog.angular-university.io/angular-material-data-table/
+
+
+
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
+import { DRMRoute, Seat, SeatStatus, Station, Voyage } from '../shared/entities.service';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+
+import * as _moment from 'moment';
+const moment = _moment;
 
 @Component({
   selector: 'app-voyage-search-panel',
@@ -21,6 +27,10 @@ export class VoyageSearchPanelComponent implements OnInit {
   public arrivalStation = '';
   public departureStation = '';
 
+  toppings = new FormControl();
+  toppingList = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
+  startDate = new FormControl(moment([2020, 0, 1]));
+  endDate = new FormControl(moment([2021, 11, 31]));
 
   constructor() {
   }
@@ -73,6 +83,23 @@ export class VoyageSearchPanelComponent implements OnInit {
     };
   }
 
+  // https://github.com/angular/components/issues/9321#issuecomment-401370261
+
+  // NEU VON PD
+
+  applyNewFilter(column: string, value) {
+    console.log('applyNewFilter', column, value);
+  }
+
+  applyNewSelectionList(column: string, data: any) {
+    console.log('applyNewSelectionList', column, data.value);
+  }
+
+  dateChanged(column: string, data: any) {
+    console.log('dateChanged', column, data);
+    console.log('dateChanged', this.startDate.value);
+  }
+
   applyFilter() {
     const date = this.searchForm.get('departureDate').value;
     const as = this.searchForm.get('arrivalStation').value;
@@ -105,15 +132,15 @@ export class VoyageSearchPanelComponent implements OnInit {
 }
 
 const STATION: Station[] = [
-  {id: 1, name: 'Kyiv'},
-  {id: 2, name: 'Kharkiv'},
-  {id: 3, name: 'Lviv'},
-  {id: 4, name: 'Poltava'},
-  {id: 5, name: 'Odesa'},
-  {id: 6, name: 'Sumy'},
-  {id: 7, name: 'Uzhhorod'},
-  {id: 8, name: 'Fastiv'},
-  {id: 9, name: 'Kharkiv'}
+  { id: 1, name: 'Kyiv' },
+  { id: 2, name: 'Kharkiv' },
+  { id: 3, name: 'Lviv' },
+  { id: 4, name: 'Poltava' },
+  { id: 5, name: 'Odesa' },
+  { id: 6, name: 'Sumy' },
+  { id: 7, name: 'Uzhhorod' },
+  { id: 8, name: 'Fastiv' },
+  { id: 9, name: 'Kharkiv' }
 ];
 
 const ROUTE_K_D: DRMRoute = {
@@ -163,51 +190,51 @@ const ROUTE_L_K: DRMRoute = {
 };
 
 const SEATS_K_D: Seat[] = [
-  {id: 1, status: SeatStatus.AVAILABLE},
-  {id: 2, status: SeatStatus.AVAILABLE},
-  {id: 3, status: SeatStatus.AVAILABLE},
-  {id: 4, status: SeatStatus.AVAILABLE},
-  {id: 5, status: SeatStatus.AVAILABLE},
-  {id: 6, status: SeatStatus.AVAILABLE},
-  {id: 7, status: SeatStatus.AVAILABLE},
-  {id: 8, status: SeatStatus.UNAVAILABLE},
-  {id: 9, status: SeatStatus.UNAVAILABLE},
-  {id: 10, status: SeatStatus.SOLD},
-  {id: 11, status: SeatStatus.SOLD},
-  {id: 12, status: SeatStatus.RESERVE},
+  { id: 1, status: SeatStatus.AVAILABLE },
+  { id: 2, status: SeatStatus.AVAILABLE },
+  { id: 3, status: SeatStatus.AVAILABLE },
+  { id: 4, status: SeatStatus.AVAILABLE },
+  { id: 5, status: SeatStatus.AVAILABLE },
+  { id: 6, status: SeatStatus.AVAILABLE },
+  { id: 7, status: SeatStatus.AVAILABLE },
+  { id: 8, status: SeatStatus.UNAVAILABLE },
+  { id: 9, status: SeatStatus.UNAVAILABLE },
+  { id: 10, status: SeatStatus.SOLD },
+  { id: 11, status: SeatStatus.SOLD },
+  { id: 12, status: SeatStatus.RESERVE },
 ];
 const SEATS_L_K: Seat[] = [
-  {id: 13, status: SeatStatus.AVAILABLE},
-  {id: 14, status: SeatStatus.AVAILABLE},
-  {id: 15, status: SeatStatus.AVAILABLE},
-  {id: 16, status: SeatStatus.AVAILABLE},
-  {id: 17, status: SeatStatus.AVAILABLE},
-  {id: 18, status: SeatStatus.UNAVAILABLE},
-  {id: 19, status: SeatStatus.UNAVAILABLE},
-  {id: 20, status: SeatStatus.SOLD},
-  {id: 21, status: SeatStatus.SOLD},
-  {id: 22, status: SeatStatus.RESERVE},
+  { id: 13, status: SeatStatus.AVAILABLE },
+  { id: 14, status: SeatStatus.AVAILABLE },
+  { id: 15, status: SeatStatus.AVAILABLE },
+  { id: 16, status: SeatStatus.AVAILABLE },
+  { id: 17, status: SeatStatus.AVAILABLE },
+  { id: 18, status: SeatStatus.UNAVAILABLE },
+  { id: 19, status: SeatStatus.UNAVAILABLE },
+  { id: 20, status: SeatStatus.SOLD },
+  { id: 21, status: SeatStatus.SOLD },
+  { id: 22, status: SeatStatus.RESERVE },
 ];
 
 const VOYAGES: Voyage[] = [
-  {id: 1, departureDate: new Date('2020-01-16'), route: ROUTE_P_S, seats: SEATS_K_D},
-  {id: 2, departureDate: new Date('2020-01-16'), route: ROUTE_L_K, seats: SEATS_L_K},
-  {id: 3, departureDate: new Date('2020-01-17'), route: ROUTE_K_D, seats: SEATS_K_D},
-  {id: 4, departureDate: new Date('2020-01-17'), route: ROUTE_L_K, seats: SEATS_L_K},
-  {id: 5, departureDate: new Date('2020-01-19'), route: ROUTE_U_K, seats: SEATS_K_D},
-  {id: 6, departureDate: new Date('2020-01-19'), route: ROUTE_L_K, seats: SEATS_L_K},
-  {id: 7, departureDate: new Date('2020-01-20'), route: ROUTE_K_D, seats: SEATS_K_D},
-  {id: 8, departureDate: new Date('2020-01-20'), route: ROUTE_P_S, seats: SEATS_L_K},
-  {id: 9, departureDate: new Date('2020-01-22'), route: ROUTE_U_K, seats: SEATS_K_D},
-  {id: 11, departureDate: new Date('2020-01-22'), route: ROUTE_L_K, seats: SEATS_L_K},
-  {id: 12, departureDate: new Date('2020-01-24'), route: ROUTE_K_D, seats: SEATS_K_D},
-  {id: 13, departureDate: new Date('2020-01-24'), route: ROUTE_L_K, seats: SEATS_L_K},
-  {id: 14, departureDate: new Date('2020-01-26'), route: ROUTE_K_D, seats: SEATS_K_D},
-  {id: 15, departureDate: new Date('2020-01-26'), route: ROUTE_L_K, seats: SEATS_L_K},
-  {id: 16, departureDate: new Date('2020-01-28'), route: ROUTE_U_K, seats: SEATS_K_D},
-  {id: 17, departureDate: new Date('2020-01-28'), route: ROUTE_L_K, seats: SEATS_L_K},
-  {id: 18, departureDate: new Date('2020-01-27'), route: ROUTE_P_S, seats: SEATS_K_D},
-  {id: 19, departureDate: new Date('2020-01-27'), route: ROUTE_P_S, seats: SEATS_L_K},
-  {id: 20, departureDate: new Date('2020-01-23'), route: ROUTE_K_D, seats: SEATS_K_D},
-  {id: 21, departureDate: new Date('2020-01-23'), route: ROUTE_P_S, seats: SEATS_L_K},
+  { id: 1, departureDate: new Date('2020-01-16'), route: ROUTE_P_S, seats: SEATS_K_D },
+  { id: 2, departureDate: new Date('2020-01-16'), route: ROUTE_L_K, seats: SEATS_L_K },
+  { id: 3, departureDate: new Date('2020-01-17'), route: ROUTE_K_D, seats: SEATS_K_D },
+  { id: 4, departureDate: new Date('2020-01-17'), route: ROUTE_L_K, seats: SEATS_L_K },
+  { id: 5, departureDate: new Date('2020-01-19'), route: ROUTE_U_K, seats: SEATS_K_D },
+  { id: 6, departureDate: new Date('2020-01-19'), route: ROUTE_L_K, seats: SEATS_L_K },
+  { id: 7, departureDate: new Date('2020-01-20'), route: ROUTE_K_D, seats: SEATS_K_D },
+  { id: 8, departureDate: new Date('2020-01-20'), route: ROUTE_P_S, seats: SEATS_L_K },
+  { id: 9, departureDate: new Date('2020-01-22'), route: ROUTE_U_K, seats: SEATS_K_D },
+  { id: 11, departureDate: new Date('2020-01-22'), route: ROUTE_L_K, seats: SEATS_L_K },
+  { id: 12, departureDate: new Date('2020-01-24'), route: ROUTE_K_D, seats: SEATS_K_D },
+  { id: 13, departureDate: new Date('2020-01-24'), route: ROUTE_L_K, seats: SEATS_L_K },
+  { id: 14, departureDate: new Date('2020-01-26'), route: ROUTE_K_D, seats: SEATS_K_D },
+  { id: 15, departureDate: new Date('2020-01-26'), route: ROUTE_L_K, seats: SEATS_L_K },
+  { id: 16, departureDate: new Date('2020-01-28'), route: ROUTE_U_K, seats: SEATS_K_D },
+  { id: 17, departureDate: new Date('2020-01-28'), route: ROUTE_L_K, seats: SEATS_L_K },
+  { id: 18, departureDate: new Date('2020-01-27'), route: ROUTE_P_S, seats: SEATS_K_D },
+  { id: 19, departureDate: new Date('2020-01-27'), route: ROUTE_P_S, seats: SEATS_L_K },
+  { id: 20, departureDate: new Date('2020-01-23'), route: ROUTE_K_D, seats: SEATS_K_D },
+  { id: 21, departureDate: new Date('2020-01-23'), route: ROUTE_P_S, seats: SEATS_L_K },
 ];
