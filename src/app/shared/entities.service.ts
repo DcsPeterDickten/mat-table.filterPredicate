@@ -31,7 +31,7 @@ export interface DRMRoute {
 
 export interface Voyage {
   id?: number;
-  departureDate: Date;
+  contactDate: Date;
   route: DRMRoute;
   seats: Seat[];
 }

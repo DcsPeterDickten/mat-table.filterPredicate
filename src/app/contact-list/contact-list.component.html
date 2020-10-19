@@ -5,7 +5,7 @@
 
       <!-- Datum  -->
 
-      <ng-container matColumnDef="departureDate">
+      <ng-container matColumnDef="contactDate">
         <th mat-header-cell *matHeaderCellDef>
           <mat-form-field>
             <input matInput [matDatepicker]="dps" placeholder="Kontakte von" [formControl]="startDate"
@@ -22,7 +22,7 @@
           </mat-form-field>
 
         </th>
-        <td mat-cell *matCellDef="let row">{{row.departureDate.toLocaleDateString('de-DE', {})}} </td>
+        <td mat-cell *matCellDef="let row">{{row.contactDate.toLocaleDateString('de-DE', {})}} </td>
 
       </ng-container>
 
@@ -130,61 +130,8 @@
           <button mat-button>
             <mat-icon>delete</mat-icon>
           </button>
-
-          <!-- <button mat-icon-button class="deleteFilter">
-            <mat-icon color="primary">Filter löschen</mat-icon>
-          </button> -->
         </th>
         <td mat-cell *matCellDef="let row"> - </td>
-      </ng-container>
-
-
-
-
-
-
-      <ng-container matColumnDef="departureStation">
-        <th mat-header-cell *matHeaderCellDef> DEP. STATION
-
-          <input class="filter-input" matInput (keyup)="applyNewFilter('DEP. STATION', $event.target.value)"
-                 placeholder="Filter DEP. STATION" />
-
-        </th>
-        <td mat-cell *matCellDef="let row"> {{row.route.departureStation.name}} </td>
-      </ng-container>
-
-      <ng-container matColumnDef="arrivalStation">
-        <th mat-header-cell *matHeaderCellDef>
-
-          <mat-form-field>
-            <mat-select placeholder="ARR. STATION" [formControl]="toppings" multiple
-                        (selectionChange)="applyNewSelectionList('ARR. STATION', $event)">
-              <mat-option *ngFor="let topping of toppingList" [value]="topping">{{topping}}</mat-option>
-            </mat-select>
-          </mat-form-field>
-
-        </th>
-        <td mat-cell *matCellDef="let row"> {{row.route.arrivalStation.name}} </td>
-      </ng-container>
-
-      <ng-container matColumnDef="available">
-        <th mat-header-cell *matHeaderCellDef> AVAILABLE </th>
-        <td mat-cell *matCellDef="let row"> {{availableSeats(row.seats)}} </td>
-      </ng-container>
-
-      <ng-container matColumnDef="sold">
-        <th mat-header-cell *matHeaderCellDef> SOLD </th>
-        <td mat-cell *matCellDef="let row"> {{soldSeats(row.seats)}} </td>
-      </ng-container>
-
-      <ng-container matColumnDef="reserve">
-        <th mat-header-cell *matHeaderCellDef> RESERVE </th>
-        <td mat-cell *matCellDef="let row"> {{reserveSeats(row.seats)}} </td>
-      </ng-container>
-
-      <ng-container matColumnDef="unavailable">
-        <th mat-header-cell *matHeaderCellDef> UNAVAILABLE </th>
-        <td mat-cell *matCellDef="let row"> {{unavailableSeats(row.seats)}} </td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
