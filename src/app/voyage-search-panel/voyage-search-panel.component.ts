@@ -19,16 +19,37 @@ const moment = _moment;
 })
 export class VoyageSearchPanelComponent implements OnInit {
   public displayedColumns: string[] =
-    ['departureDate', 'departureStation', 'arrivalStation', 'available', 'sold', 'reserve', 'unavailable'];
+    ['departureDate', 'kontaktart', 'kanal', 'kategorie', 'thema', 'terminzustellung', 'user', 'status', 'aktion'];
+
+  // 'arrivalStation', 'available', 'sold', 'reserve', 'unavailable'
   public dataSource: MatTableDataSource<Voyage>;
 
   public searchForm: FormGroup;
   public departureDate = '';
   public arrivalStation = '';
   public departureStation = '';
+  public thema = '';
 
   toppings = new FormControl();
   toppingList = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
+
+  public kontaktart = '';
+  formControlKontaktart = new FormControl();
+  kontaktarten = ['Kunde direkt', 'Schriftverkehr', 'Kampagne', 'BASE-Mitteilung', 'Elektr. Nachricht'];
+
+  public kanal = '';
+  formControlKanal = new FormControl();
+  kanaele = ['Persönlich', 'Inbound/Outbound Call', 'Call Center', 'Online-Banking'];
+
+  public kategorie = '';
+  formControlKategorie = new FormControl();
+  kategorien = ['Kredit', 'Geldanlage', 'Vorsorge', 'Kooperationspartner', 'Zahlungsverkehr', 'Reklamationen',
+    'Verträge', 'Sonderkonditionen', 'Termine', 'Dokumente', 'Mahnwesen'];
+
+  public status = '';
+  formControlStatus = new FormControl();
+  statusWerte = ['Aktiv'];
+
   startDate = new FormControl(moment([2020, 0, 1]));
   endDate = new FormControl(moment([2021, 11, 31]));
 
@@ -47,6 +68,8 @@ export class VoyageSearchPanelComponent implements OnInit {
     this.searchForm = new FormGroup({
       arrivalStation: new FormControl('', Validators.pattern('^[a-zA-Z ]+$')),
       departureStation: new FormControl('', Validators.pattern('^[a-zA-Z ]+$')),
+      formControlThema: new FormControl('', Validators.pattern('^[a-zA-Z ]+$')),
+      formControlUser: new FormControl('', Validators.pattern('^[a-zA-Z ]+$')),
       departureDate: new FormControl('')
     });
   }

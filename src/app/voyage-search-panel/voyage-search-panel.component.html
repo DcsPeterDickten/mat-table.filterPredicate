@@ -1,48 +1,147 @@
 <div>
-  <form [formGroup]="searchForm" class="search__form">
-
-    <mat-form-field class="search__form_field" appearance="outline">
-      <mat-label>Departure station</mat-label>
-      <input type="text" aria-label="Departure station" matInput formControlName="departureStation"
-             (keyup)="applyFilter()">
-    </mat-form-field>
-
-    <mat-form-field class="search__form_field" appearance="outline">
-      <mat-label>Arrival station</mat-label>
-      <input type="text" aria-label="Arrival station" matInput formControlName="arrivalStation" (keyup)="applyFilter()">
-    </mat-form-field>
-
-    <mat-form-field class="search__form_field" appearance="outline">
-      <mat-label>Choose a date</mat-label>
-      <input matInput formControlName="departureDate" [matDatepicker]="picker" (dateInput)="applyFilter()">
-      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
-    </mat-form-field>
-  </form>
 
   <div class="search__table mat-elevation-z8">
     <table mat-table [dataSource]="dataSource">
 
+      <!-- Datum  -->
+
       <ng-container matColumnDef="departureDate">
         <th mat-header-cell *matHeaderCellDef>
-
           <mat-form-field>
-            <input matInput [matDatepicker]="dps" placeholder="Start date" [formControl]="startDate"
+            <input matInput [matDatepicker]="dps" placeholder="Kontakte von" [formControl]="startDate"
                    (dateChange)="dateChanged('startDate', dps)">
             <mat-datepicker-toggle matSuffix [for]="dps"></mat-datepicker-toggle>
             <mat-datepicker #dps></mat-datepicker>
           </mat-form-field>
           <br />
           <mat-form-field>
-            <input matInput [matDatepicker]="dpe" placeholder="End  date" [formControl]="endDate"
+            <input matInput [matDatepicker]="dpe" placeholder="Kontakte bis" [formControl]="endDate"
                    (dateChange)="dateChanged('endDate', endDate.value)">
             <mat-datepicker-toggle matSuffix [for]="dpe"></mat-datepicker-toggle>
             <mat-datepicker #dpe></mat-datepicker>
           </mat-form-field>
 
         </th>
-        <td mat-cell *matCellDef="let row"> {{row.departureDate.toDateString()}} </td>
+        <td mat-cell *matCellDef="let row">{{row.departureDate.toLocaleDateString('de-DE', {})}} </td>
+
       </ng-container>
+
+      <!-- Kontaktart  -->
+
+      <ng-container matColumnDef="kontaktart">
+        <th mat-header-cell *matHeaderCellDef>
+
+          <mat-form-field>
+            <mat-select placeholder="Kontaktart" [formControl]="formControlKontaktart" multiple
+                        (selectionChange)="applyNewSelectionList('Kontaktart', $event)">
+              <mat-option *ngFor="let kontaktart of kontaktarten" [value]="kontaktart">{{kontaktart}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+        </th>
+        <td mat-cell *matCellDef="let row"> - </td>
+      </ng-container>
+
+      <!-- Kanal  -->
+
+      <ng-container matColumnDef="kanal">
+        <th mat-header-cell *matHeaderCellDef>
+
+          <mat-form-field>
+            <mat-select placeholder="Kanal" [formControl]="formControlKanal" multiple
+                        (selectionChange)="applyNewSelectionList('Kanal', $event)">
+              <mat-option *ngFor="let kanal of kanaele" [value]="kanal">{{kanal}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+        </th>
+        <td mat-cell *matCellDef="let row"> - </td>
+      </ng-container>
+
+      <!-- Kategorie  -->
+
+      <ng-container matColumnDef="kategorie">
+        <th mat-header-cell *matHeaderCellDef>
+
+          <mat-form-field>
+            <mat-select placeholder="Kategorie" [formControl]="formControlKategorie" multiple
+                        (selectionChange)="applyNewSelectionList('Kategorie', $event)">
+              <mat-option *ngFor="let kategorie of kategorien" [value]="kategorie">{{kategorie}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+        </th>
+        <td mat-cell *matCellDef="let row"> - </td>
+      </ng-container>
+
+      <!-- Thema  -->
+
+      <ng-container matColumnDef="thema">
+        <th mat-header-cell *matHeaderCellDef> Thema
+
+          <input class="filter-input" matInput (keyup)="applyNewFilter('Thema', $event.target.value)"
+                 placeholder="Thema" />
+
+        </th>
+        <td mat-cell *matCellDef="let row"> - </td>
+      </ng-container>
+
+      <!-- Terminzustellung  -->
+
+      <ng-container matColumnDef="terminzustellung">
+        <th mat-header-cell *matHeaderCellDef>Terminzustellung
+        </th>
+        <td mat-cell *matCellDef="let row"> - </td>
+      </ng-container>
+
+      <!-- User  -->
+
+      <ng-container matColumnDef="user">
+        <th mat-header-cell *matHeaderCellDef>User
+
+          <input class="filter-input" matInput (keyup)="applyNewFilter('User', $event.target.value)"
+                 placeholder="User" />
+
+        </th>
+        <td mat-cell *matCellDef="let row"> - </td>
+      </ng-container>
+
+      <!-- Status  -->
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>
+
+          <mat-form-field>
+            <mat-select placeholder="Status" [formControl]="formControlStatus" multiple
+                        (selectionChange)="applyNewSelectionList('Status', $event)">
+              <mat-option *ngFor="let status of statusWerte" [value]="status">{{status}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+        </th>
+        <td mat-cell *matCellDef="let row"> - </td>
+      </ng-container>
+
+      <!-- Aktion  -->
+
+      <ng-container matColumnDef="aktion">
+        <th mat-header-cell *matHeaderCellDef>&nbsp;&nbsp;&nbsp;&nbsp;Aktion
+          <br />
+          <button mat-button>
+            <mat-icon>delete</mat-icon>
+          </button>
+
+          <!-- <button mat-icon-button class="deleteFilter">
+            <mat-icon color="primary">Filter löschen</mat-icon>
+          </button> -->
+        </th>
+        <td mat-cell *matCellDef="let row"> - </td>
+      </ng-container>
+
+
+
+
+
 
       <ng-container matColumnDef="departureStation">
         <th mat-header-cell *matHeaderCellDef> DEP. STATION
