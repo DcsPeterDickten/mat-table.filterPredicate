@@ -1,5 +1,6 @@
 // https://medium.com/@sevriukovmk/angular-mat-table-filter-2ead680c57bb
 // https://blog.angular-university.io/angular-material-data-table/
+// https://github.com/angular/components/issues/9321#issuecomment-401370261
 
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
@@ -21,28 +22,24 @@ export class ContactListComponent implements OnInit {
 
   public dataSource: MatTableDataSource<Voyage>;
   public searchForm: FormGroup;
+
   public contactDate = '';
   public thema = '';
-  public kontaktart = '';
 
-  formControlKontaktart = new FormControl();
-  kontaktarten = ['Kunde direkt', 'Schriftverkehr', 'Kampagne', 'BASE-Mitteilung', 'Elektr. Nachricht'];
+  public kontaktart = '';
+  public kontaktarten = ['Kunde direkt', 'Schriftverkehr', 'Kampagne', 'BASE-Mitteilung', 'Elektr. Nachricht'];
 
   public kanal = '';
-  formControlKanal = new FormControl();
-  kanaele = ['Persönlich', 'Inbound/Outbound Call', 'Call Center', 'Online-Banking'];
+  public kanaele = ['Persönlich', 'Inbound/Outbound Call', 'Call Center', 'Online-Banking'];
 
   public kategorie = '';
-  formControlKategorie = new FormControl();
-  kategorien = ['Kredit', 'Geldanlage', 'Vorsorge', 'Kooperationspartner', 'Zahlungsverkehr', 'Reklamationen',
+  public kategorien = ['Kredit', 'Geldanlage', 'Vorsorge', 'Kooperationspartner', 'Zahlungsverkehr', 'Reklamationen',
     'Verträge', 'Sonderkonditionen', 'Termine', 'Dokumente', 'Mahnwesen'];
 
   public status = '';
-  formControlStatus = new FormControl();
-  statusWerte = ['Aktiv'];
+  public statusWerte = ['Aktiv'];
 
-  startDate = new FormControl(moment([2020, 0, 1]));
-  endDate = new FormControl(moment([2021, 11, 31]));
+  public allFilters = {};
 
   ngOnInit() {
     this.dataSource = new MatTableDataSource(CONTACTS);
@@ -56,7 +53,13 @@ export class ContactListComponent implements OnInit {
     this.searchForm = new FormGroup({
       formControlThema: new FormControl('', Validators.pattern('^[a-zA-Z ]+$')),
       formControlUser: new FormControl('', Validators.pattern('^[a-zA-Z ]+$')),
-      contactDate: new FormControl('')
+      formControlContactDate: new FormControl(''),
+      formControlKontaktart: new FormControl(),
+      formControlKanal: new FormControl(),
+      formControlKategorie: new FormControl(),
+      formControlStatus: new FormControl(),
+      formControlStartDate: new FormControl(moment([2020, 0, 1])),
+      formControlEndDate: new FormControl(moment([2021, 11, 31]))
     });
   }
 
@@ -65,7 +68,7 @@ export class ContactListComponent implements OnInit {
     return (row: Voyage, filters: string) => {
       // split string per '$' to array
       const filterArray = filters.split('$');
-      console.log(filterArray);
+      console.log({ filterArray });
 
       // const matchFilter = [];
 
@@ -77,21 +80,21 @@ export class ContactListComponent implements OnInit {
     };
   }
 
-  // https://github.com/angular/components/issues/9321#issuecomment-401370261
 
-  // NEU VON PD
 
   applyNewFilter(column: string, value) {
-    console.log('applyNewFilter', column, value);
+    this.allFilters[column] = value;
+    console.log('allFilters', this.allFilters);
   }
 
   applyNewSelectionList(column: string, data: any) {
-    console.log('applyNewSelectionList', column, data.value);
+    this.allFilters[column] = data.value;
+    console.log('allFilters', this.allFilters);
   }
 
   dateChanged(column: string, data: any) {
-    console.log('dateChanged', column, data);
-    console.log('dateChanged', this.startDate.value);
+    this.allFilters[column] = data;
+    console.log('allFilters', this.allFilters);
   }
 
   applyFilter() {

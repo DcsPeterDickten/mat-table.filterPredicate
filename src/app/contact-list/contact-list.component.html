@@ -1,140 +1,150 @@
 <div>
 
   <div class="search__table mat-elevation-z8">
+
+    {{allFilters | json}}
+
     <table mat-table [dataSource]="dataSource">
 
-      <!-- Datum  -->
+      <form [formGroup]="searchForm">
 
-      <ng-container matColumnDef="contactDate">
-        <th mat-header-cell *matHeaderCellDef>
-          <mat-form-field>
-            <input matInput [matDatepicker]="dps" placeholder="Kontakte von" [formControl]="startDate"
-                   (dateChange)="dateChanged('startDate', dps)">
-            <mat-datepicker-toggle matSuffix [for]="dps"></mat-datepicker-toggle>
-            <mat-datepicker #dps></mat-datepicker>
-          </mat-form-field>
-          <br />
-          <mat-form-field>
-            <input matInput [matDatepicker]="dpe" placeholder="Kontakte bis" [formControl]="endDate"
-                   (dateChange)="dateChanged('endDate', endDate.value)">
-            <mat-datepicker-toggle matSuffix [for]="dpe"></mat-datepicker-toggle>
-            <mat-datepicker #dpe></mat-datepicker>
-          </mat-form-field>
+        <!-- Datum  -->
 
-        </th>
-        <td mat-cell *matCellDef="let row">{{row.contactDate.toLocaleDateString('de-DE', {})}} </td>
 
-      </ng-container>
 
-      <!-- Kontaktart  -->
+        <ng-container matColumnDef="contactDate">
+          <th mat-header-cell *matHeaderCellDef>
+            <mat-form-field>
+              <input matInput [matDatepicker]="dps" placeholder="Kontakte von" formControlName="formControlStartDate"
+                     (dateChange)="dateChanged('startDate', dps)">
+              <mat-datepicker-toggle matSuffix [for]="dps"></mat-datepicker-toggle>
+              <mat-datepicker #dps></mat-datepicker>
+            </mat-form-field>
+            <br />
+            <mat-form-field>
+              <input matInput [matDatepicker]="dpe" placeholder="Kontakte bis" formControlName="formControlEndDate"
+                     (dateChange)="dateChanged('endDate', dpe)">
+              <mat-datepicker-toggle matSuffix [for]="dpe"></mat-datepicker-toggle>
+              <mat-datepicker #dpe></mat-datepicker>
+            </mat-form-field>
 
-      <ng-container matColumnDef="kontaktart">
-        <th mat-header-cell *matHeaderCellDef>
+          </th>
+          <td mat-cell *matCellDef="let row">{{row.contactDate.toLocaleDateString('de-DE', {})}} </td>
 
-          <mat-form-field>
-            <mat-select placeholder="Kontaktart" [formControl]="formControlKontaktart" multiple
-                        (selectionChange)="applyNewSelectionList('Kontaktart', $event)">
-              <mat-option *ngFor="let kontaktart of kontaktarten" [value]="kontaktart">{{kontaktart}}</mat-option>
-            </mat-select>
-          </mat-form-field>
+        </ng-container>
 
-        </th>
-        <td mat-cell *matCellDef="let row"> - </td>
-      </ng-container>
+        <!-- Kontaktart  -->
 
-      <!-- Kanal  -->
+        <ng-container matColumnDef="kontaktart">
+          <th mat-header-cell *matHeaderCellDef>
 
-      <ng-container matColumnDef="kanal">
-        <th mat-header-cell *matHeaderCellDef>
+            <mat-form-field>
+              <mat-select placeholder="Kontaktart" formControlName="formControlKontaktart" multiple
+                          (selectionChange)="applyNewSelectionList('Kontaktart', $event)">
+                <mat-option *ngFor="let kontaktart of kontaktarten" [value]="kontaktart">{{kontaktart}}</mat-option>
+              </mat-select>
+            </mat-form-field>
 
-          <mat-form-field>
-            <mat-select placeholder="Kanal" [formControl]="formControlKanal" multiple
-                        (selectionChange)="applyNewSelectionList('Kanal', $event)">
-              <mat-option *ngFor="let kanal of kanaele" [value]="kanal">{{kanal}}</mat-option>
-            </mat-select>
-          </mat-form-field>
+          </th>
+          <td mat-cell *matCellDef="let row"> - </td>
+        </ng-container>
 
-        </th>
-        <td mat-cell *matCellDef="let row"> - </td>
-      </ng-container>
+        <!-- Kanal  -->
 
-      <!-- Kategorie  -->
+        <ng-container matColumnDef="kanal">
+          <th mat-header-cell *matHeaderCellDef>
 
-      <ng-container matColumnDef="kategorie">
-        <th mat-header-cell *matHeaderCellDef>
+            <mat-form-field>
+              <mat-select placeholder="Kanal" formControlName="formControlKanal" multiple
+                          (selectionChange)="applyNewSelectionList('Kanal', $event)">
+                <mat-option *ngFor="let kanal of kanaele" [value]="kanal">{{kanal}}</mat-option>
+              </mat-select>
+            </mat-form-field>
 
-          <mat-form-field>
-            <mat-select placeholder="Kategorie" [formControl]="formControlKategorie" multiple
-                        (selectionChange)="applyNewSelectionList('Kategorie', $event)">
-              <mat-option *ngFor="let kategorie of kategorien" [value]="kategorie">{{kategorie}}</mat-option>
-            </mat-select>
-          </mat-form-field>
+          </th>
+          <td mat-cell *matCellDef="let row"> - </td>
+        </ng-container>
 
-        </th>
-        <td mat-cell *matCellDef="let row"> - </td>
-      </ng-container>
+        <!-- Kategorie  -->
 
-      <!-- Thema  -->
+        <ng-container matColumnDef="kategorie">
+          <th mat-header-cell *matHeaderCellDef>
 
-      <ng-container matColumnDef="thema">
-        <th mat-header-cell *matHeaderCellDef> Thema
+            <mat-form-field>
+              <mat-select placeholder="Kategorie" formControlName="formControlKategorie" multiple
+                          (selectionChange)="applyNewSelectionList('Kategorie', $event)">
+                <mat-option *ngFor="let kategorie of kategorien" [value]="kategorie">{{kategorie}}</mat-option>
+              </mat-select>
+            </mat-form-field>
 
-          <input class="filter-input" matInput (keyup)="applyNewFilter('Thema', $event.target.value)"
-                 placeholder="Thema" />
+          </th>
+          <td mat-cell *matCellDef="let row"> - </td>
+        </ng-container>
 
-        </th>
-        <td mat-cell *matCellDef="let row"> - </td>
-      </ng-container>
+        <!-- Thema  -->
 
-      <!-- Terminzustellung  -->
+        <ng-container matColumnDef="thema">
+          <th mat-header-cell *matHeaderCellDef> Thema
 
-      <ng-container matColumnDef="terminzustellung">
-        <th mat-header-cell *matHeaderCellDef>Terminzustellung
-        </th>
-        <td mat-cell *matCellDef="let row"> - </td>
-      </ng-container>
+            <input class="filter-input" matInput (keyup)="applyNewFilter('Thema', $event.target.value)"
+                   placeholder="Thema" />
 
-      <!-- User  -->
+          </th>
+          <td mat-cell *matCellDef="let row"> - </td>
+        </ng-container>
 
-      <ng-container matColumnDef="user">
-        <th mat-header-cell *matHeaderCellDef>User
+        <!-- Terminzustellung  -->
 
-          <input class="filter-input" matInput (keyup)="applyNewFilter('User', $event.target.value)"
-                 placeholder="User" />
+        <ng-container matColumnDef="terminzustellung">
+          <th mat-header-cell *matHeaderCellDef>Terminzustellung
+          </th>
+          <td mat-cell *matCellDef="let row"> - </td>
+        </ng-container>
 
-        </th>
-        <td mat-cell *matCellDef="let row"> - </td>
-      </ng-container>
+        <!-- User  -->
 
-      <!-- Status  -->
+        <ng-container matColumnDef="user">
+          <th mat-header-cell *matHeaderCellDef>User
 
-      <ng-container matColumnDef="status">
-        <th mat-header-cell *matHeaderCellDef>
+            <input class="filter-input" matInput (keyup)="applyNewFilter('User', $event.target.value)"
+                   placeholder="User" />
 
-          <mat-form-field>
-            <mat-select placeholder="Status" [formControl]="formControlStatus" multiple
-                        (selectionChange)="applyNewSelectionList('Status', $event)">
-              <mat-option *ngFor="let status of statusWerte" [value]="status">{{status}}</mat-option>
-            </mat-select>
-          </mat-form-field>
+          </th>
+          <td mat-cell *matCellDef="let row"> - </td>
+        </ng-container>
 
-        </th>
-        <td mat-cell *matCellDef="let row"> - </td>
-      </ng-container>
+        <!-- Status  -->
 
-      <!-- Aktion  -->
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>
 
-      <ng-container matColumnDef="aktion">
-        <th mat-header-cell *matHeaderCellDef>&nbsp;&nbsp;&nbsp;&nbsp;Aktion
-          <br />
-          <button mat-button>
-            <mat-icon>delete</mat-icon>
-          </button>
-        </th>
-        <td mat-cell *matCellDef="let row"> - </td>
-      </ng-container>
+            <mat-form-field>
+              <mat-select placeholder="Status" formControlName="formControlStatus" multiple
+                          (selectionChange)="applyNewSelectionList('Status', $event)">
+                <mat-option *ngFor="let status of statusWerte" [value]="status">{{status}}</mat-option>
+              </mat-select>
+            </mat-form-field>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+          </th>
+          <td mat-cell *matCellDef="let row"> - </td>
+        </ng-container>
+
+        <!-- Aktion  -->
+
+        <ng-container matColumnDef="aktion">
+          <th mat-header-cell *matHeaderCellDef>&nbsp;&nbsp;&nbsp;&nbsp;Aktion
+            <br />
+            <button mat-button>
+              <mat-icon>delete</mat-icon>
+            </button>
+          </th>
+          <td mat-cell *matCellDef="let row"> - </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+
+      </form>
+
       <tr mat-row *matRowDef="let row; columns: displayedColumns;">
       </tr>
     </table>
